@@ -31,12 +31,12 @@ export class ShopController {
   }
 
   @Put(':id')
-  updateProduct(@Param('id') id: any, @Body() product: InterfaceProduct) {
+  updateProduct(@Param('id') id: string, @Body() product: InterfaceProduct) {
     return this.shopService.update(id, product);
   }
 
   @Delete(':id')
-  deleteProduct(@Param('id') id: any) {
+  deleteProduct(@Param('id') id: string) {
     return this.shopService.delete(id);
   }
 }

@@ -1,32 +1,31 @@
 import { Injectable } from '@nestjs/common';
-// import { InjectModel } from '@nestjs/mongoose';
+import { InjectModel } from '@nestjs/mongoose';
 import { CreateProductDto } from './dto/create-product.dto';
 import { InterfaceProduct } from './interfaces/index.interface';
-// import { Product, ProductDocument } from './schemas/product.schema';
-// import { Model } from 'mongoose';
-import Product from './schemas/product.schema';
+import { Product, ProductDocument } from './schemas/product.schema';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class ShopService {
-  /* constructor(
+  constructor(
     @InjectModel(Product.name) private productModel: Model<ProductDocument>,
-  ) {} */
+  ) {}
 
   async findAll() {
-    return Product.find();
+    return this.productModel.find().exec();
   }
 
-  async findOne(id: any) {
-    return Product.findOne({ _id: id }).exec();
+  async findOne(id: string) {
+    return this.productModel.findOne({ _id: id }).exec();
   }
 
   async create(product: CreateProductDto) {
-    const createdProduct = new Product({ ...product });
+    const createdProduct = new this.productModel(product);
     return createdProduct.save();
   }
 
-  async update(id: any, product: InterfaceProduct) {
-    return Product.updateOne({ _id: id }, { ...product, _id: id }).exec();
+  async update(id: string, product: InterfaceProduct) {
+    return this.productModel.updateOne({ _id: id }, product).exec();
     /* const productToUpdate = this.products.find((product) => product.id === +id);
     if (!productToUpdate) {
       return new NotFoundException('Not Found update');
@@ -47,8 +46,8 @@ export class ShopService {
     return { product: productToUpdate }; */
   }
 
-  async delete(id: any) {
-    return Product.deleteOne({ _id: id }).exec();
+  async delete(id: string) {
+    return this.productModel.deleteOne({ _id: id }).exec();
 
     /* const productToDelete = this.products.find((product) => product.id === +id);
     if (!productToDelete) {
